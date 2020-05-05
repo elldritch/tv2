@@ -56,12 +56,64 @@ glass = Factory { powered = False
 
 sand :: Factory
 sand =
-  Factory { powered = False, inputs = Set.fromList [Worker], output = Sand }
+  Factory { powered = False, inputs = Set.singleton Worker, output = Sand }
+
+ironOre :: Factory
+ironOre =
+  Factory { powered = False, inputs = Set.singleton Worker, output = IronOre }
+
+steelSlab :: Factory
+steelSlab = Factory { powered = False
+                    , inputs  = Set.fromList [Worker, Coal, IronOre]
+                    , output  = SteelSlab
+                    }
+
+steelPlate :: Factory
+steelPlate = Factory { powered = True
+                     , inputs  = Set.fromList [Worker, SteelSlab]
+                     , output  = SteelPlate
+                     }
+
+buildingMaterials :: Factory
+buildingMaterials = Factory { powered = True
+                            , inputs  = Set.fromList [Worker, SteelPlate, Glass]
+                            , output  = BuildingMaterials
+                            }
+
+appliances :: Factory
+appliances = Factory
+  { powered = False
+  , inputs  = Set.fromList [Worker, CopperIngots, ProcessedRubber]
+  , output  = Appliances
+  }
+
+naturalRubber :: Factory
+naturalRubber = Factory { powered = False
+                        , inputs  = Set.singleton Worker
+                        , output  = NaturalRubber
+                        }
+
+processedRubber :: Factory
+processedRubber = Factory { powered = False
+                          , inputs  = Set.fromList [Worker, NaturalRubber]
+                          , output  = ProcessedRubber
+                          }
+
+-- Shipyards.
+
+copperIngotShipyard :: Factory
+copperIngotShipyard = Factory { powered = False
+                              , inputs  = Set.singleton Worker
+                              , output  = CopperIngots
+                              }
 
 -- Default generators.
 
 coalGenerator :: Generator
 coalGenerator = Generator { inputs = Set.fromList [Worker, Coal] }
+
+hydroGenerator :: Generator
+hydroGenerator = Generator { inputs = Set.singleton Worker }
 
 -- Levels.
 
@@ -76,6 +128,45 @@ panamaCanal = Level
                   ]
   }
 
+goldenGate :: Level
+goldenGate = Level
+  { factories = Set.fromList
+                  [ ironOre
+                  , coal
+                  , steelSlab
+                  , buildingMaterials
+                  , steelPlate
+                  , sand
+                  , glass
+                  ]
+  , generator = coalGenerator
+  , cities    = Map.fromList
+                  [ ("south", Map.fromList [(Glass, 12)])
+                  , ( "northwest"
+                    , Map.fromList
+                      [(SteelSlab, 8), (BuildingMaterials, 5), (SteelPlate, 5)]
+                    )
+                  ]
+  }
+
+wardenclyffe :: Level
+wardenclyffe = Level
+  { factories = Set.fromList
+                  [ copperIngotShipyard
+                  , wire
+                  , oil
+                  , polymers
+                  , appliances
+                  , naturalRubber
+                  , processedRubber
+                  ]
+  , generator = hydroGenerator
+  , cities    = Map.fromList
+                  [ ("docks", Map.fromList [(Appliances, 12), (Polymers, 4)])
+                  , ("woods", Map.fromList [(Wire, 12), (ProcessedRubber, 8)])
+                  ]
+  }
+
 -- TODO: Really this should be a list, but I don't have all the level data.
 levels :: Map Int Level
-levels = Map.fromList [(25, panamaCanal)]
+levels = Map.fromList [(25, panamaCanal), (26, goldenGate), (27, wardenclyffe)]
