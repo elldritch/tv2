@@ -7,15 +7,19 @@ import           System.IO                                ( IO
                                                           , putStrLn
                                                           )
 
+import           GHC.Num                                  ( (+) )
+
 import           Data.Function                            ( ($) )
 import           Data.Int                                 ( Int )
 import           Data.List                                ( (++) )
 import qualified Data.Tree                     as Tree
+import           Data.Tree                                ( Forest, Tree )
 
 import           Data.Maybe                               ( Maybe(..) )
 import           Data.Either                              ( Either(..) )
 
 import           Data.Semigroup                           ( (<>) )
+import           Data.Foldable                            ( foldr )
 import           Data.Functor                             ( fmap
                                                           , (<$>)
                                                           )
@@ -37,6 +41,7 @@ import           Options.Applicative                      ( ParserInfo
                                                           , (<**>)
                                                           )
 
+import           TV2.Types
 import           TV2.Levels                               ( levels )
 import           TV2.Solver                               ( solve )
 
@@ -54,7 +59,27 @@ main = do
   options <- execParser opts
   let n = levelNumber options
   case Map.lookup n levels of
-    Just level -> putStrLn $ case solve level of
-      Right tree -> Tree.drawForest $ fmap (fmap show) tree
-      Left  err  -> err
-    Nothing -> putStrLn $ "Unknown level: " ++ (show n)
+    Nothing    -> putStrLn $ "Unknown level: " ++ (show n)
+    Just level -> case solve level of
+      Left  err  -> putStrLn err
+      Right tree -> do
+        putStrLn $ Tree.drawForest $ fmap (fmap show) tree
+        putStrLn $ show $ treeTotals tree
+
+ where
+  treeTotals :: (Forest Requirement) -> Requirements
+  treeTotals forest = foldr accForest Map.empty forest
+
+  accForest :: Tree Requirement -> Requirements -> Requirements
+  accForest tree acc = Map.unionWith (+) (foldTree tree) acc
+
+  foldTree :: Tree Requirement -> Requirements
+  foldTree tree = foldr accTree Map.empty tree
+
+  accTree :: (Requirement -> Requirements -> Requirements)
+  accTree (item, count) acc = Map.alter (addReq count) item acc
+
+  addReq :: Int -> Maybe Int -> Maybe Int
+  addReq n v = case v of
+    Just v' -> Just (n + v')
+    Nothing -> Just n
