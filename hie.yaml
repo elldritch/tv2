@@ -1,0 +1,8 @@
+cradle:
+  cabal:
+    - path: "./app"
+      component: "exe:tv2"
+    - path: "./src"
+      component: "lib:tv2"
+    - path: "./test"
+      component: "test:tests"
