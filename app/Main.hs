@@ -7,13 +7,17 @@ import           System.IO                                ( IO
                                                           , putStrLn
                                                           )
 
-import           GHC.Num                                  ( (+) )
-
-import           Data.Function                            ( ($) )
 import           Data.Int                                 ( Int )
-import           Data.List                                ( (++) )
+import           GHC.Num                                  ( (+) )
+import           Data.Tuple                               ( snd )
+import           Data.Function                            ( ($) )
+
+import           Data.List                                (intercalate,  (++), sortOn, reverse )
 import qualified Data.Tree                     as Tree
-import           Data.Tree                                ( Forest, Tree )
+import           Data.Tree                                ( Forest
+                                                          , Tree
+                                                          )
+import qualified Data.Map.Strict               as Map
 
 import           Data.Maybe                               ( Maybe(..) )
 import           Data.Either                              ( Either(..) )
@@ -25,8 +29,6 @@ import           Data.Functor                             ( fmap
                                                           )
 
 import           Text.Show                                ( show )
-
-import qualified Data.Map.Strict               as Map
 
 import           Options.Applicative                      ( ParserInfo
                                                           , auto
@@ -64,7 +66,11 @@ main = do
       Left  err  -> putStrLn err
       Right tree -> do
         putStrLn $ Tree.drawForest $ fmap (fmap show) tree
-        putStrLn $ show $ treeTotals tree
+        putStrLn
+          $ intercalate "\n"
+          $ fmap (\(item, count) -> (show item) ++ ": " ++ (show count))
+          $ reverse $ sortOn snd
+          $ Map.toList $ treeTotals tree
 
  where
   treeTotals :: (Forest Requirement) -> Requirements

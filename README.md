@@ -5,5 +5,5 @@ This calculator displays the supply tree of Train Valley 2 levels, and computes 
 ## Usage
 
 ```
-cabal run tv2
+cabal run --verbose=0 tv2 -- --level 42
 ```
