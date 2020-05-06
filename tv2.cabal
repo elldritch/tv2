@@ -20,10 +20,11 @@ library
   import:          lang
   build-depends:
     , containers  ==0.6.2.1
-    , extra ==1.7.1
+    , extra       ==1.7.1
 
   -- cabal-fmt: expand src
   exposed-modules:
+    TV2.Factories
     TV2.Levels
     TV2.Solver
     TV2.Types
@@ -45,7 +46,7 @@ test-suite tests
   import:         lang
   build-depends:
     , containers  ==0.6.2.1
-    , hspec  ==2.7.1
+    , hspec       ==2.7.1
     , tv2
 
   type:           exitcode-stdio-1.0
