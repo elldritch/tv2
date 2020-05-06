@@ -11,6 +11,23 @@ import           TV2.Types                                ( Factory(..)
                                                           , Item(..)
                                                           )
 
+grain :: Factory
+grain =
+  Factory { powered = False, inputs = Set.singleton Worker, output = Grain }
+
+cattle :: Factory
+cattle = Factory { powered = False
+                 , inputs  = Set.fromList [Worker, Grain]
+                 , output  = Cattle
+                 }
+
+cannedGoods :: Factory
+cannedGoods = Factory
+  { powered = True
+  , inputs  = Set.fromList [Worker, Grain, Cattle, SteelPlates]
+  , output  = CannedGoods
+  }
+
 copperOre :: Factory
 copperOre =
   Factory { powered = False, inputs = Set.singleton Worker, output = CopperOre }
@@ -60,17 +77,18 @@ steelSlab = Factory { powered = False
                     , output  = SteelSlab
                     }
 
-steelPlate :: Factory
-steelPlate = Factory { powered = True
-                     , inputs  = Set.fromList [Worker, SteelSlab]
-                     , output  = SteelPlate
-                     }
+steelPlates :: Factory
+steelPlates = Factory { powered = True
+                      , inputs  = Set.fromList [Worker, SteelSlab]
+                      , output  = SteelPlates
+                      }
 
 buildingMaterials :: Factory
-buildingMaterials = Factory { powered = True
-                            , inputs  = Set.fromList [Worker, SteelPlate, Glass]
-                            , output  = BuildingMaterials
-                            }
+buildingMaterials = Factory
+  { powered = True
+  , inputs  = Set.fromList [Worker, SteelPlates, Glass]
+  , output  = BuildingMaterials
+  }
 
 appliances :: Factory
 appliances = Factory
@@ -98,6 +116,17 @@ copperIngotShipyard = Factory { powered = False
                               , inputs  = Set.singleton Worker
                               , output  = CopperIngots
                               }
+
+steelPlateShipyard :: Factory
+steelPlateShipyard = Factory { powered = False
+                             , inputs  = Set.singleton Worker
+                             , output  = SteelPlates
+                             }
+
+-- Timed deliveries
+
+coalTimed :: Factory
+coalTimed = Factory { powered = False, inputs = Set.empty, output = Coal }
 
 -- Default generators.
 

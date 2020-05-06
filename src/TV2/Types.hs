@@ -32,12 +32,15 @@ data Item =
   | Glass
   | Sand
   | SteelSlab
-  | SteelPlate
+  | SteelPlates
   | BuildingMaterials
   | IronOre
   | Appliances
   | NaturalRubber
   | ProcessedRubber
+  | Grain
+  | Cattle
+  | CannedGoods
   deriving (Eq, Ord, Show)
 
 data Factory = Factory {

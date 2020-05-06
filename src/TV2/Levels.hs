@@ -34,7 +34,7 @@ goldenGate = Level
                   , coal
                   , steelSlab
                   , buildingMaterials
-                  , steelPlate
+                  , steelPlates
                   , sand
                   , glass
                   ]
@@ -43,7 +43,7 @@ goldenGate = Level
                   [ ("south", Map.fromList [(Glass, 12)])
                   , ( "northwest"
                     , Map.fromList
-                      [(SteelSlab, 8), (BuildingMaterials, 5), (SteelPlate, 5)]
+                      [(SteelSlab, 8), (BuildingMaterials, 5), (SteelPlates, 5)]
                     )
                   ]
   }
@@ -66,6 +66,29 @@ wardenclyffe = Level
                   ]
   }
 
+maeklong :: Level
+maeklong = Level
+  { factories = Set.fromList
+                  [ grain
+                  , cattle
+                  , steelPlateShipyard
+                  , sand
+                  , coalTimed
+                  , glass
+                  , cannedGoods
+                  , buildingMaterials
+                  ]
+  , generator = coalGenerator
+  , cities    = Map.fromList
+                  [ ("southwest", Map.fromList [(Cattle, 8)])
+                  , ( "southeast"
+                    , Map.fromList [(Glass, 12), (BuildingMaterials, 10)]
+                    )
+                  , ("northwest", Map.fromList [(CannedGoods, 10)])
+                  ]
+  }
+
 -- TODO: Really this should be a list, but I don't have all the level data.
 levels :: Map Int Level
-levels = Map.fromList [(25, panamaCanal), (26, goldenGate), (27, wardenclyffe)]
+levels = Map.fromList
+  [(25, panamaCanal), (26, goldenGate), (27, wardenclyffe), (28, maeklong)]
